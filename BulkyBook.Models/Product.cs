@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 
 using System.Collections.Generic;
 
@@ -67,13 +68,11 @@ namespace BulkyBook.Models
         //in questo caso l'annotazione non sarebbe necessaria perché i nomi delle chiavi esterne e delle chiavi primarie già rispettano le convenzioni di EF Core
 
         [ForeignKey("CategoryId")]
-
+        [ValidateNever]
         public Category Category { get; set; } = null!;
-
         [Required]
-
         public int CoverTypeId { get; set; }
-
+        [ValidateNever]
         public CoverType CoverType { get; set; } = null!;
 
     }
