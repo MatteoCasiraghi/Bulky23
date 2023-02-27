@@ -19,7 +19,7 @@ namespace BulkyBook.DataAccess.Repository
 
         public void Update(Product product)
         {
-            
+
             var objFromDb = _db.Products.FirstOrDefault(u => u.Id == product.Id);
 
             if (objFromDb != null)
@@ -54,6 +54,7 @@ namespace BulkyBook.DataAccess.Repository
 
                 }
             }
-    }
+        }
 
+    }
 }

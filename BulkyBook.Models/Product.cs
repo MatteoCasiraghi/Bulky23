@@ -77,3 +77,4 @@ namespace BulkyBook.Models
         public CoverType CoverType { get; set; } = null!;
 
     }
+}
