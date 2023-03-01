@@ -44,6 +44,7 @@
 
 	<ItemGroup>
 	  <Folder Include="wwwroot\images\products\" />
+	  <Folder Include="wwwroot\lib\DataTables\" />
 	</ItemGroup>
 
 </Project>
