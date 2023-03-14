@@ -8,12 +8,15 @@ namespace BulkyBookWeb.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+
     //private readonly IUnitOfWork _unitOfWork;
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
-
+        _unitOfWork = unitOfWork;
     }
+
 
     //public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
     //{
@@ -27,6 +30,24 @@ public class HomeController : Controller
         //return View(productList);
         return View();
     }
+    public IActionResult Details(int productId)
+    {
+        var selectedProductInDb = _unitOfWork.Product.GetFirstOrDefault(product => product.Id == productId, "Category,CoverType");
+        if (selectedProductInDb != null)
+        {
+            ShoppingCart cartObj = new()
+            {
+                Count = 1,
+                Product = selectedProductInDb
+
+            };
+            return View(cartObj);
+        }
+
+        return RedirectToAction(nameof(Index));
+
+    }
+
 
     public IActionResult Privacy()
     {
