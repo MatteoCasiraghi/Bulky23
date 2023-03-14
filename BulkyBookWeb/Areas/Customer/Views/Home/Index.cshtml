@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Product>
+﻿
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row pb-3">
+@*<div class="row pb-3">
     @foreach (var product in Model)
     {
         <div class="col-lg-3 col-md-6">
@@ -29,4 +29,33 @@
             </div>
         </div>
     }
+</div>*@
+
+<div class="container p-3">
+
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Product List</h2>
+            @*            <div class="alert alert-primary" role="alert">
+            Row data: <span id="row-data"></span>
+            </div>*@
+        </div>
+
+    </div>
+    <br /><br />
+    <table id="tblData" class="table table-bordered table-striped cards" style="width:100%;  ">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>List Price</th>
+                <th>Lowest Price</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
 </div>
+@section Scripts{
+    <script src="~/js/homeProducts.js"></script>
+}
