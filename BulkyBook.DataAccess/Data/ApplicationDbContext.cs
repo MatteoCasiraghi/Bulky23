@@ -20,6 +20,8 @@ namespace BulkyBook.DataAccess
         public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
 
         public DbSet<Company> Companies { get; set; } = null!;
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; } = null!;
+
 
 
 
