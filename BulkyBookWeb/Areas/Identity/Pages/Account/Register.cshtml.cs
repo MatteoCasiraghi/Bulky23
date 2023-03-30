@@ -13,12 +13,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 namespace BulkyBookWeb.Areas.Identity.Pages.Account
 {
+
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -69,6 +72,7 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        //questo è solo l’InputModel
         public class InputModel
         {
             /// <summary>
@@ -109,12 +113,15 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
             public string? Role { get; set; }
-            public int? CompanyId { get; set; }
 #nullable disable
+            [ValidateNever]
+            public IEnumerable<SelectListItem> RoleList { get; set; }
 
         }
 
 
+
+        //questo è solo OnGetAsync
         public async Task OnGetAsync(string returnUrl = null)
         {
             //quando si richiama la pagina di registrazione si verifica se sono presenti i ruoli,
@@ -129,7 +136,16 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            Input = new InputModel()
+            {
+                RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                })
+            };
         }
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
