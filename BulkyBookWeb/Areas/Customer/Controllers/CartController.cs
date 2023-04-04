@@ -42,6 +42,39 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
 			return View(ShoppingCartVM);
 		}
 
+		public IActionResult Summary()
+		{
+			var userIdentity = User.Identity;
+			if (userIdentity != null)
+			{
+				var claimsIdentity = (ClaimsIdentity)userIdentity;
+				var claim = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier);
+				if (claim != null)
+				{
+					ShoppingCartVM = new ShoppingCartVM()
+					{
+						//recupero i dati della ShoppingCart dal database
+						ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Product"),
+						OrderHeader = new()
+					};
+					//recupero i dati dell'utente a partire dal suo Id --> claim.value corrisponde all'Id dell'utente in AspNetUsers
+					ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value)!;
+					ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+					ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber ?? string.Empty;
+					ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAddress ?? string.Empty;
+					ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City ?? string.Empty;
+					ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State ?? string.Empty;
+					ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode ?? string.Empty;
+					//calcolo il totale da mostrare nel summary
+					foreach (var cart in ShoppingCartVM.ListCart)
+					{
+						cart.Price = GetPriceBasedOnQuantity(cart.Count, cart.Product.Price, cart.Product.Price50, cart.Product.Price100);
+						ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
+					}
+				}
+			}
+			return View(ShoppingCartVM);
+		}
 
 		public IActionResult Plus(int cartId)
 		{
@@ -71,9 +104,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
 			}
 			return RedirectToAction(nameof(Index));
 		}
-		public IActionResult Summary() {
-			return View();
-		}
+
 		public IActionResult Remove(int cartId)
 		{
 			var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
