@@ -64,7 +64,7 @@
                 </select>
             </div>
             <div class="form-floating mb-3 py-2 col-6">
-                <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select" aria-label="Company">
+                <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select" aria-label="Company" style="display:none;">
                     <option disabled selected>-Select Company-</option>
                 </select>
             </div>
@@ -108,5 +108,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function(){
+            $('#Input_Role').change(function(){
+                //https://learn.jquery.com/using-jquery-core/faq/how-do-i-get-the-text-value-of-a-selected-option/
+                //https://stackoverflow.com/a/10659117
+                var selection = $('#Input_Role option:selected').val().toLowerCase();
+                if(selection!='company'){
+                    $('#Input_CompanyId').hide();
+                }else{
+                    $('#Input_CompanyId').show();
+                }
+            })
+        });
+    </script>
+
 }
 
