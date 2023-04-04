@@ -69,7 +69,9 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
 			}
 			return RedirectToAction(nameof(Index));
 		}
-
+		public IActionResult Summary() {
+			return View();
+		}
 		public IActionResult Remove(int cartId)
 		{
 			var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
